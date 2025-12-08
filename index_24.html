@@ -1,0 +1,1819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abhinav Chaudhary - Cybersecurity & Software Development</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --terminal-green: #00ff41;
+            --cyber-red: #ff0844;
+            --code-blue: #00d4ff;
+            --fun-purple: #b24bf3;
+            --ink-black: #0a0a0a;
+            --tech-white: #fafafa;
+            --text-gray: #4a4a4a;
+            --border-gray: #d4d4d4;
+            --panel-bg: #ffffff;
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        @keyframes loadingDots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        /* Loading indicator for in-progress items */
+        .loading-indicator {
+            display: inline-flex;
+            align-items: center;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--terminal-green);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 0.3rem 0.8rem;
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid var(--terminal-green);
+            border-radius: 2px;
+        }
+
+        .loading-indicator::before {
+            content: '[ ';
+            color: var(--terminal-green);
+        }
+
+        .loading-indicator::after {
+            content: ' ]';
+            color: var(--terminal-green);
+        }
+
+        .loading-indicator .dots {
+            display: inline-block;
+            width: 20px;
+            text-align: left;
+        }
+
+        .loading-indicator .dots::after {
+            content: '...';
+            animation: loadingDots 1.5s infinite;
+        }
+
+        .loading-indicator .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 12px;
+            background: var(--terminal-green);
+            margin-left: 4px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes glitchShift {
+            0%, 90%, 100% { transform: translate(0); }
+            92% { transform: translate(-2px, 2px); }
+            94% { transform: translate(2px, -2px); }
+            96% { transform: translate(-1px, -1px); }
+        }
+
+        @keyframes binaryRain {
+            0% { transform: translateY(-100%); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--tech-white);
+            color: var(--ink-black);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Binary pattern screen tone */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 0, 0, 0.015) 2px,
+                    rgba(0, 0, 0, 0.015) 4px
+                );
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        /* Subtle scanlines */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.02) 0px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .main-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Left side - fixed */
+        .left-side {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 40%;
+            height: 100vh;
+            padding: 5rem 3rem 5rem 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-right: 3px solid var(--ink-black);
+            background: var(--panel-bg);
+            overflow: hidden;
+        }
+
+        /* Circuit board pattern background */
+        .left-side::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            background-image: 
+                linear-gradient(90deg, transparent 49%, var(--ink-black) 49%, var(--ink-black) 51%, transparent 51%),
+                linear-gradient(0deg, transparent 49%, var(--ink-black) 49%, var(--ink-black) 51%, transparent 51%);
+            background-size: 60px 60px;
+            pointer-events: none;
+        }
+
+        /* Falling binary code */
+        .binary-rain {
+            position: absolute;
+            top: -100%;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            color: var(--terminal-green);
+            opacity: 0.1;
+            white-space: nowrap;
+            animation: binaryRain 15s linear infinite;
+            pointer-events: none;
+        }
+
+        .binary-rain:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .binary-rain:nth-child(2) { left: 30%; animation-delay: 3s; }
+        .binary-rain:nth-child(3) { left: 50%; animation-delay: 6s; }
+        .binary-rain:nth-child(4) { left: 70%; animation-delay: 9s; }
+        .binary-rain:nth-child(5) { left: 90%; animation-delay: 12s; }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+            animation: glitchShift 5s infinite;
+        }
+
+        /* RGB glitch effect */
+        .logo::before,
+        .logo::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+        }
+
+        .logo::before {
+            color: var(--cyber-red);
+            z-index: -1;
+            animation: glitchShift 5s infinite;
+            animation-delay: 0.1s;
+        }
+
+        .logo::after {
+            color: var(--code-blue);
+            z-index: -2;
+            animation: glitchShift 5s infinite;
+            animation-delay: 0.2s;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            margin-bottom: 2rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .tagline::before {
+            content: '> ';
+            color: var(--terminal-green);
+            font-weight: 700;
+        }
+
+        .description {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--text-gray);
+            margin-bottom: 3rem;
+        }
+
+        /* Navigation with cursor */
+        nav ul {
+            list-style: none;
+        }
+
+        nav li {
+            margin-bottom: 1.5rem;
+        }
+
+        nav a {
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            position: relative;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        nav a::before {
+            content: '//';
+            display: inline-block;
+            width: 30px;
+            color: var(--text-gray);
+            margin-right: 15px;
+            transition: all 0.3s;
+            font-weight: 700;
+        }
+
+        nav a::after {
+            content: '_';
+            opacity: 0;
+            animation: blink 1s infinite;
+            margin-left: 5px;
+        }
+
+        nav a:hover,
+        nav a.active {
+            color: var(--terminal-green);
+        }
+
+        nav a:hover::before,
+        nav a.active::before {
+            color: var(--terminal-green);
+            content: '>>';
+        }
+
+        nav a.active::after {
+            opacity: 1;
+        }
+
+        /* Social links with hex styling */
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            position: relative;
+            z-index: 1;
+            flex-wrap: wrap;
+        }
+
+        .social-links a {
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: all 0.3s;
+            font-family: 'IBM Plex Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .social-links a::before {
+            content: '0x';
+            color: var(--terminal-green);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--terminal-green);
+            transform: translateY(-2px);
+        }
+
+        .social-links a:hover::before {
+            opacity: 1;
+        }
+
+        /* Right side - scrollable */
+        .right-side {
+            margin-left: 40%;
+            width: 60%;
+            padding: 5rem 4rem;
+            position: relative;
+        }
+
+        /* Code pattern overlay */
+        .right-side::before {
+            content: 'const experience = { skills: [], projects: [], achievements: [] }; // Building the future...';
+            position: fixed;
+            top: 50%;
+            right: 10%;
+            transform: translateY(-50%);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--ink-black);
+            opacity: 0.02;
+            white-space: pre-wrap;
+            max-width: 35%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        section {
+            margin-bottom: 6rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            position: relative;
+            z-index: 1;
+        }
+
+        section:nth-child(1) { animation-delay: 0.1s; }
+        section:nth-child(2) { animation-delay: 0.2s; }
+        section:nth-child(3) { animation-delay: 0.3s; }
+        section:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+        }
+
+        /* Terminal prompt headers */
+        h2 {
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            color: var(--ink-black);
+            font-family: 'IBM Plex Mono', monospace;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::before {
+            content: '>_ ';
+            color: var(--terminal-green);
+            margin-right: 8px;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--ink-black);
+        }
+
+        /* Circuit board card borders */
+        .card {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: var(--panel-bg);
+            border: 2px solid var(--ink-black);
+            position: relative;
+            transition: all 0.3s;
+            overflow: hidden;
+        }
+
+        /* Circuit corner connectors */
+        .card::before,
+        .card::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border: 2px solid var(--terminal-green);
+            background: var(--panel-bg);
+        }
+
+        .card::before {
+            top: -1px;
+            left: -1px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .card::after {
+            top: -1px;
+            right: -1px;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        /* Hexadecimal screen tone on hover */
+        .hex-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 10px;
+            color: var(--cyber-red);
+            overflow: hidden;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .card:hover .hex-pattern {
+            opacity: 0.05;
+        }
+
+        .card:hover {
+            transform: translateX(5px);
+            box-shadow: -8px 8px 0 rgba(0, 0, 0, 0.05);
+            border-color: var(--terminal-green);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .date {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .date::before {
+            content: '[ ';
+            color: var(--terminal-green);
+        }
+
+        .date::after {
+            content: ' ]';
+            color: var(--terminal-green);
+        }
+
+        .company {
+            font-size: 1rem;
+            color: var(--text-gray);
+            margin-bottom: 1rem;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .company::before {
+            content: '@ ';
+            color: var(--code-blue);
+        }
+
+        .card p {
+            line-height: 1.8;
+            color: var(--text-gray);
+            margin-bottom: 1rem;
+        }
+
+        .card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .card li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+            line-height: 1.8;
+            color: var(--text-gray);
+        }
+
+        .card li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--terminal-green);
+            font-weight: 700;
+        }
+
+        /* Tech tags with code styling */
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .tech-tag {
+            font-size: 0.7rem;
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 700;
+            padding: 0.4rem 0.8rem;
+            background: var(--tech-white);
+            border: 1px solid var(--ink-black);
+            color: var(--text-gray);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+        .tech-tag:hover {
+            background: var(--ink-black);
+            color: var(--terminal-green);
+            transform: translateY(-2px);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: transparent;
+            border: 2px solid var(--ink-black);
+            color: var(--ink-black);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--ink-black);
+            transition: left 0.3s;
+            z-index: -1;
+        }
+
+        .btn:hover {
+            color: var(--terminal-green);
+            border-color: var(--terminal-green);
+        }
+
+        .btn:hover::before {
+            left: 0;
+        }
+
+        /* Fun Mode Tab */
+        .fun-mode-tab {
+            position: fixed;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--fun-purple);
+            color: #fff;
+            padding: 1.5rem 0.7rem;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid var(--fun-purple);
+            border-right: none;
+            border-radius: 8px 0 0 8px;
+            z-index: 999;
+            box-shadow: -3px 0 10px rgba(178, 75, 243, 0.3);
+        }
+
+        .fun-mode-tab:hover {
+            background: var(--cyber-red);
+            border-color: var(--cyber-red);
+            padding-right: 1.5rem;
+            box-shadow: -5px 0 20px rgba(255, 8, 68, 0.5);
+            transform: translateY(-50%) translateX(-5px);
+        }
+
+        /* Fun Mode Overlay */
+        .fun-mode-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            z-index: 2000;
+            display: none;
+            opacity: 0;
+        }
+
+        .fun-mode-overlay.active {
+            display: block;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .fun-mode-content {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 60%;
+            height: 100%;
+            background: var(--panel-bg);
+            border-left: 4px solid var(--fun-purple);
+            padding: 3rem;
+            overflow-y: auto;
+            transform: translateX(100%);
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .fun-mode-overlay.active .fun-mode-content {
+            animation: slideInRight 0.5s ease forwards;
+        }
+
+        .fun-mode-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--ink-black);
+        }
+
+        .fun-mode-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            font-family: 'IBM Plex Mono', monospace;
+            color: var(--fun-purple);
+        }
+
+        .fun-mode-title::before {
+            content: '> ';
+            color: var(--terminal-green);
+        }
+
+        .close-fun-mode {
+            background: var(--ink-black);
+            color: var(--terminal-green);
+            border: 2px solid var(--terminal-green);
+            padding: 0.8rem 1.5rem;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .close-fun-mode:hover {
+            background: var(--terminal-green);
+            color: var(--ink-black);
+        }
+
+        .fun-mode-description {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.95rem;
+            color: var(--text-gray);
+            line-height: 1.8;
+            margin-bottom: 3rem;
+            padding: 1.5rem;
+            background: var(--tech-white);
+            border-left: 4px solid var(--fun-purple);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .game-panel {
+            background: var(--panel-bg);
+            border: 3px solid var(--ink-black);
+            padding: 2rem;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .game-panel:hover {
+            border-color: var(--fun-purple);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(178, 75, 243, 0.2);
+        }
+
+        .game-title {
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            font-family: 'IBM Plex Mono', monospace;
+            color: var(--fun-purple);
+        }
+
+        .game-title::before {
+            content: 'RUN: ';
+            color: var(--terminal-green);
+            font-size: 0.8rem;
+        }
+
+        .game-canvas {
+            width: 100%;
+            max-width: 100%;
+            height: 400px;
+            background: var(--panel-bg);
+            border: 2px solid var(--ink-black);
+            margin: 1rem 0;
+            display: block;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1rem;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .game-info span {
+            color: var(--fun-purple);
+            font-size: 1.3rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--panel-bg);
+            padding: 3rem;
+            border: 3px solid var(--terminal-green);
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .modal-content h3 {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .modal-content h3::before {
+            content: '> ';
+            color: var(--terminal-green);
+        }
+
+        .modal-content p {
+            margin: 1.5rem 0;
+            line-height: 1.8;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-container {
+                flex-direction: column;
+            }
+
+            .left-side {
+                position: relative;
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 3px solid var(--ink-black);
+                padding: 3rem 2rem;
+            }
+
+            .right-side {
+                margin-left: 0;
+                width: 100%;
+                padding: 3rem 2rem;
+            }
+
+            .fun-mode-tab {
+                /* Mobile: Show as fixed button at bottom */
+                position: fixed !important;
+                bottom: 20px !important;
+                right: 20px !important;
+                top: auto !important;
+                left: auto !important;
+                width: auto !important;
+                height: auto !important;
+                transform: none !important;
+                writing-mode: horizontal-tb !important;
+                text-orientation: mixed !important;
+                padding: 1rem 1.5rem !important;
+                border: 2px solid var(--fun-purple) !important;
+                border-right: 2px solid var(--fun-purple) !important;
+                border-radius: 8px !important;
+                font-size: 0.85rem !important;
+                box-shadow: 0 4px 12px rgba(178, 75, 243, 0.4) !important;
+                z-index: 1000 !important;
+            }
+
+            .fun-mode-tab:hover {
+                transform: scale(1.05) !important;
+                padding: 1rem 1.5rem !important;
+                padding-right: 1.5rem !important;
+                background: var(--cyber-red) !important;
+                border-color: var(--cyber-red) !important;
+                box-shadow: 0 6px 16px rgba(255, 8, 68, 0.5) !important;
+            }
+
+            .fun-mode-content {
+                width: 100%;
+            }
+
+            nav {
+                margin-bottom: 2rem;
+            }
+
+            .binary-rain {
+                display: none;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+
+            .tagline {
+                font-size: 1rem;
+            }
+
+            .left-side,
+            .right-side {
+                padding: 2rem 1.5rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .fun-mode-content {
+                padding: 2rem 1.5rem;
+            }
+
+            .fun-mode-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fun Mode Tab -->
+    <div class="fun-mode-tab" onclick="toggleFunMode()">TAKE A BREAK?</div>
+
+    <!-- Fun Mode Overlay -->
+    <div class="fun-mode-overlay" id="funModeOverlay">
+        <div class="fun-mode-content">
+            <div class="fun-mode-header">
+                <h1 class="fun-mode-title">FUN_MODE</h1>
+                <button class="close-fun-mode" onclick="toggleFunMode()">$ EXIT</button>
+            </div>
+
+            <div class="fun-mode-description">
+                // Status: Escaping from another "quick sync" that wasn't quick<br>
+                // TODO: Refactor life to include more fun<br>
+                // Note: These games won't fix your production bugs, but they might make you forget about them<br>
+                // Warning: Arrow keys required. Your mouse is taking a break too.
+            </div>
+
+            <div class="games-grid">
+                <div class="game-panel">
+                    <div class="game-title">CODE_SNAKE.EXE</div>
+                    <p style="color: var(--text-gray); margin-bottom: 1rem; font-family: IBM Plex Mono, monospace; font-size: 0.9rem;">
+                        Collect tech skills faster than your LinkedIn connections. Warning: May cause imposter syndrome and an urge to pad your resume.
+                    </p>
+                    <canvas id="snakeCanvas" class="game-canvas" width="500" height="400"></canvas>
+                    <div class="game-info">
+                        <div>SCORE: <span id="snakeScore">0</span></div>
+                        <div>SKILLS: <span id="snakeSkills">0</span></div>
+                    </div>
+                    <button class="btn" id="snakeStartBtn" onclick="startSnakeGame()" style="margin-top: 1rem;">$ START GAME</button>
+                </div>
+
+                <div class="game-panel">
+                    <div class="game-title">CAREER_PONG.JS</div>
+                    <p style="color: var(--text-gray); margin-bottom: 1rem; font-family: IBM Plex Mono, monospace; font-size: 0.9rem;">
+                        Bounce your way through career milestones. Harder than actual career progression, but with better graphics and no office politics.
+                    </p>
+                    <canvas id="pongCanvas" class="game-canvas" width="500" height="400"></canvas>
+                    <div class="game-info">
+                        <div>SCORE: <span id="pongScore">0</span></div>
+                        <div>LEVEL: <span id="pongLevel">1</span></div>
+                    </div>
+                    <button class="btn" id="pongStartBtn" onclick="startPongGame()" style="margin-top: 1rem;">$ START GAME</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- Left Side - Fixed -->
+        <div class="left-side">
+            <!-- Binary rain effect -->
+            <div class="binary-rain">01001000 01100101 01101100 01101100 01101111</div>
+            <div class="binary-rain">01010111 01101111 01110010 01101100 01100100</div>
+            <div class="binary-rain">01000011 01101111 01100100 01100101 01110010</div>
+            <div class="binary-rain">01000100 01100101 01110110 01100101 01101100</div>
+            <div class="binary-rain">01010000 01110010 01101111 01100111 01110010</div>
+
+            <div class="header-content">
+                <h1 class="logo" data-text="ABHINAV CHAUDHARY">ABHINAV CHAUDHARY</h1>
+                <p class="tagline">Cybersecurity Engineer / Software Developer</p>
+                <p class="description">
+                    Building secure systems and breaking things (responsibly). Passionate about automation, cloud infrastructure, and making IT less painful.
+                </p>
+
+                <nav>
+                    <ul>
+                        <li><a href="#about" class="active">ABOUT</a></li>
+                        <li><a href="#education">EDUCATION</a></li>
+                        <li><a href="#experience">EXPERIENCE</a></li>
+                        <li><a href="#skills">SKILLS</a></li>
+                        <li><a href="#projects">PROJECTS</a></li>
+                        <li><a href="#certifications">CERTS</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="social-links">
+                <a href="https://github.com/abhinavc97" target="_blank">GITHUB</a>
+                <a href="https://linkedin.com/in/abhinavc97" target="_blank">LINKEDIN</a>
+                <a href="/cdn-cgi/l/email-protection#5e3f3c3637706f6767696c6a1e39333f3732703d3133">EMAIL</a>
+            </div>
+        </div>
+
+        <!-- Right Side - Scrollable Content -->
+        <div class="right-side">
+            <!-- About Section -->
+            <section id="about">
+                <h2>ABOUT</h2>
+                <p style="line-height: 1.8; color: var(--text-gray); margin-bottom: 1rem;">
+                    Hey there! I'm a cybersecurity engineer and software developer who recently completed my Master's in Cybersecurity at The George Washington University (GPA: 3.7). I spend my days securing enterprise systems, automating everything that can be automated, and occasionally explaining to people why "password123" isn't a great security strategy.
+                </p>
+                <p style="line-height: 1.8; color: var(--text-gray);">
+                    With over 3 years of experience in enterprise IT and security, I've worked on everything from endpoint management and VDI infrastructure to cloud security and identity management. I'm passionate about building tools that make security less painful and more efficient. When I'm not breaking (or fixing) things in production, you'll find me tinkering with automation scripts, exploring new security frameworks, or building side projects that solve problems I probably created myself.
+                </p>
+            </section>
+
+            <!-- Education Section -->
+            <section id="education">
+                <h2>EDUCATION</h2>
+
+                <div class="card">
+                    <div class="hex-pattern">#Cybersecurity #ComputerScience #GWU #Masters</div>
+                    <div class="card-header">
+                        <div>
+                            <p class="date">MAY 2025</p>
+                            <h3>Master of Science in Cybersecurity</h3>
+                            <p class="company">The George Washington University</p>
+                        </div>
+                    </div>
+                    <p style="line-height: 1.8; color: var(--text-gray); margin-bottom: 0.5rem;">
+                        <strong>GPA: 3.7/4.0</strong> | School of Engineering & Computer Science
+                    </p>
+                    <p style="line-height: 1.8; color: var(--text-gray);">
+                        <strong>Coursework:</strong> Network Security, Computer Network Defense, Advanced Software Paradigms, Database Management, Unix Systems
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="hex-pattern">#IT #Engineering #Bachelor #India</div>
+                    <div class="card-header">
+                        <div>
+                            <p class="date">MAY 2020</p>
+                            <h3>Bachelor of Technology in Information Technology</h3>
+                            <p class="company">Guru Gobind Singh Indraprastha University</p>
+                        </div>
+                    </div>
+                    <p style="line-height: 1.8; color: var(--text-gray);">
+                        <strong>Coursework:</strong> Algorithm Design & Analysis, Data Structures, Software Security, Database Administration
+                    </p>
+                </div>
+            </section>
+
+            <!-- Experience Section -->
+            <section id="experience">
+                <h2>EXPERIENCE</h2>
+
+                <div class="card">
+                    <div class="hex-pattern">#WebDev #Automation #InvoiceSystem #FullStack</div>
+                    <div class="card-header">
+                        <div>
+                            <p class="date">JULY 2025 — AUG 2025</p>
+                            <h3>Technical Solutions Developer (Contract)</h3>
+                            <p class="company">Smith Applied Solutions <span style="color: var(--text-gray); font-weight: 400;">| Maryland, USA</span></p>
+                        </div>
+                    </div>
+                    <ul>
+                        <li>Revamped company website to enhance digital presence and improve user experience</li>
+                        <li>Developed automated invoicing system that generates invoices based on customer requirement inputs, streamlining billing processes</li>
+                        <li>Implemented full-stack solutions with focus on automation and efficiency</li>
+                    </ul>
+                    <div class="tech-tags">
+                        <span class="tech-tag">WEB DEVELOPMENT</span>
+                        <span class="tech-tag">AUTOMATION</span>
+                        <span class="tech-tag">PYTHON</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="hex-pattern">#Intune #VDI #Azure #Tier3 #EndpointManagement #HIPAA</div>
+                    <div class="card-header">
+                        <div>
+                            <p class="date">OCT 2022 — AUG 2023</p>
+                            <h3>Senior System Security Engineer</h3>
+                            <p class="company">Infosys Limited <span style="color: var(--text-gray); font-weight: 400;">| Delhi, India</span></p>
+                        </div>
+                    </div>
+                    <ul>
+                        <li>Architected enterprise endpoint management solutions for Fortune 500 healthcare organization using Intune-equivalent platforms and VDI infrastructure</li>
+                        <li>Served as Tier 3 escalation point for complex incidents, reducing recurring issues by 40% through root cause analysis and systematic improvements</li>
+                        <li>Partnered with IT security, cloud computing, and networking teams to deliver integrated solutions maintaining zero-trust security principles and HIPAA compliance</li>
+                        <li>Developed PowerShell and Python automation to streamline endpoint provisioning and management, implementing experience-level metrics to monitor device health</li>
+                    </ul>
+                    <div class="tech-tags">
+                        <span class="tech-tag">MICROSOFT INTUNE</span>
+                        <span class="tech-tag">AZURE VDI</span>
+                        <span class="tech-tag">POWERSHELL</span>
+                        <span class="tech-tag">HIPAA</span>
+                        <span class="tech-tag">TIER 3</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="hex-pattern">#HybridCloud #Windows #Linux #Automation #Leadership</div>
+                    <div class="card-header">
+                        <div>
+                            <p class="date">JAN 2021 — SEPT 2022</p>
+                            <h3>System Security Engineer</h3>
+                            <p class="company">Infosys Limited <span style="color: var(--text-gray); font-weight: 400;">| Delhi, India</span></p>
+                        </div>
+                    </div>
+                    <ul>
+                        <li>Managed endpoint and virtual computing infrastructure across hybrid Windows and Linux environments, implementing automated solutions that improved operational efficiency by 30%</li>
+                        <li>Provided technical leadership and mentorship to team members on endpoint management best practices, fostering innovation culture</li>
+                        <li>Maintained strong documentation and change control practices ensuring system reliability and compliance</li>
+                        <li>Led endpoint transformation initiatives using Agile methodologies, evaluating emerging technologies and translating them into actionable strategies</li>
+                    </ul>
+                    <div class="tech-tags">
+                        <span class="tech-tag">WINDOWS</span>
+                        <span class="tech-tag">LINUX</span>
+                        <span class="tech-tag">AUTOMATION</span>
+                        <span class="tech-tag">AGILE</span>
+                        <span class="tech-tag">MENTORSHIP</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Skills Section -->
+            <section id="skills">
+                <h2>SKILLS</h2>
+
+                <div class="card">
+                    <div class="hex-pattern">#Intune #ConfigMgr #JamfPro #Provisioning #DeviceHealth</div>
+                    <h3>Endpoint Management Platforms</h3>
+                    <div class="tech-tags">
+                        <span class="tech-tag">MICROSOFT INTUNE</span>
+                        <span class="tech-tag">CONFIG MANAGER</span>
+                        <span class="tech-tag">JAMF PRO</span>
+                        <span class="tech-tag">AUTO PROVISIONING</span>
+                        <span class="tech-tag">DEVICE MONITORING</span>
+                        <span class="tech-tag">ENTERPRISE MDM</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="hex-pattern">#AzureVDI #VirtualDesktop #HybridCloud #ResilientSolutions</div>
+                    <h3>Virtual Desktop Infrastructure</h3>
+                    <div class="tech-tags">
+                        <span class="tech-tag">AZURE VDI</span>
+                        <span class="tech-tag">VDI ARCHITECTURE</span>
+                        <span class="tech-tag">HYBRID ENVIRONMENTS</span>
+                        <span class="tech-tag">VIRTUAL COMPUTING</span>
+                        <span class="tech-tag">RESILIENT DESIGN</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="hex-pattern">#Windows #macOS #Linux #M365 #EntraID #ActiveDirectory</div>
+                    <h3>Operating Systems & Platforms</h3>
+                    <div class="tech-tags">
+                        <span class="tech-tag">WINDOWS</span>
+                        <span class="tech-tag">MACOS</span>
+                        <span class="tech-tag">LINUX</span>
+                        <span class="tech-tag">MICROSOFT 365</span>
+                        <span class="tech-tag">ENTRA ID</span>
+                        <span class="tech-tag">ACTIVE DIRECTORY</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="hex-pattern">#PowerShell #Bash #Python #Automation #DevOps</div>
+                    <h3>Scripting & Automation</h3>
+                    <div class="tech-tags">
+                        <span class="tech-tag">POWERSHELL</span>
+                        <span class="tech-tag">BASH</span>
+                        <span class="tech-tag">PYTHON</span>
+                        <span class="tech-tag">ENDPOINT AUTOMATION</span>
+                        <span class="tech-tag">PROVISIONING</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="hex-pattern">#Azure #ZeroTrust #EDR #XDR #NIST #HIPAA #FERPA</div>
+                    <h3>Cloud & Security</h3>
+                    <div class="tech-tags">
+                        <span class="tech-tag">AZURE CLOUD</span>
+                        <span class="tech-tag">ZERO-TRUST</span>
+                        <span class="tech-tag">EDR/XDR</span>
+                        <span class="tech-tag">NIST</span>
+                        <span class="tech-tag">HIPAA</span>
+                        <span class="tech-tag">FERPA</span>
+                        <span class="tech-tag">ENDPOINT SECURITY</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="hex-pattern">#Tier3 #ITIL #Troubleshooting #IncidentManagement</div>
+                    <h3>IT Service Management</h3>
+                    <div class="tech-tags">
+                        <span class="tech-tag">TIER 3 SUPPORT</span>
+                        <span class="tech-tag">TROUBLESHOOTING</span>
+                        <span class="tech-tag">INCIDENT MGMT</span>
+                        <span class="tech-tag">ITIL</span>
+                        <span class="tech-tag">TICKETING SYSTEMS</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projects Section -->
+            <section id="projects">
+                <h2>PROJECTS</h2>
+
+                <div class="card">
+                    <div class="hex-pattern">#EDR #SOC #SOAR #ThreatIntelligence #OpenSource</div>
+                    <div class="card-header">
+                        <div>
+                            <h3>Open Source EDR & SOC Automation</h3>
+                        </div>
+                    </div>
+                    <p style="line-height: 1.8; color: var(--text-gray); margin-bottom: 1rem;">
+                        Implemented an open-source Security Operations Center (SOC) automation workflow to streamline incident response, automate routine tasks, and integrate threat intelligence feeds.
+                    </p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">OPENCTI</span>
+                        <span class="tech-tag">MISP</span>
+                        <span class="tech-tag">THEHIVE</span>
+                        <span class="tech-tag">CORTEX</span>
+                        <span class="tech-tag">SHUFFLE</span>
+                        <span class="tech-tag">SOAR</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="hex-pattern">#AI #GPT #PDFRedaction #OpenAI #PyMuPDF</div>
+                    <div class="card-header">
+                        <div>
+                            <h3>Redact AI</h3>
+                        </div>
+                    </div>
+                    <p style="line-height: 1.8; color: var(--text-gray); margin-bottom: 1rem;">
+                        Built a GPT-powered tool that redacts sensitive information from PDFs using blackout or placeholder overlays, preserving the original layout. Integrated OpenAI API with PyMuPDF to apply redactions directly on uploaded documents.
+                    </p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">OPENAI API</span>
+                        <span class="tech-tag">GPT</span>
+                        <span class="tech-tag">PYTHON</span>
+                        <span class="tech-tag">PYMUPDF</span>
+                        <span class="tech-tag">PDF PROCESSING</span>
+                        <span class="tech-tag">AI/ML</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="hex-pattern">#DevSecOps #CloudSecurity #OWASP #MultiCloud</div>
+                    <div class="card-header">
+                        <div>
+                            <h3>Cloud Configuration Security Scanner</h3>
+                        </div>
+                    </div>
+                    <p style="line-height: 1.8; color: var(--text-gray); margin-bottom: 1rem;">
+                        Built production-ready security tool scanning AWS, Azure, GCP, and Kubernetes configurations for OWASP CNAS compliance violations with 18+ automated tests and enterprise CLI interface.
+                    </p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">PYTHON</span>
+                        <span class="tech-tag">AWS</span>
+                        <span class="tech-tag">AZURE</span>
+                        <span class="tech-tag">GCP</span>
+                        <span class="tech-tag">KUBERNETES</span>
+                        <span class="tech-tag">DEVSECOPS</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="hex-pattern">#WebApp #Visualization #NetworkSecurity #FullStack</div>
+                    <div class="card-header">
+                        <div>
+                            <h3>Traceroute 3D Visualization</h3>
+                        </div>
+                    </div>
+                    <p style="line-height: 1.8; color: var(--text-gray); margin-bottom: 1rem;">
+                        Developed full-stack security visualization web application for network path analysis on 3D globe with real-time threat monitoring. Implemented SQLite-based geolocation security analysis and deployed on AWS and Vercel.
+                    </p>
+                    <a href="https://traceroute-globe.vercel.app" target="_blank" class="btn" style="display: inline-block; margin-bottom: 1rem;">$ VIEW LIVE DEMO</a>
+                    <div class="tech-tags">
+                        <span class="tech-tag">REACT</span>
+                        <span class="tech-tag">THREE.JS</span>
+                        <span class="tech-tag">FLASK</span>
+                        <span class="tech-tag">SQLITE</span>
+                        <span class="tech-tag">AWS</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Certifications Section -->
+            <section id="certifications">
+                <h2>CERTIFICATIONS</h2>
+
+                <div class="card">
+                    <div class="hex-pattern">aws:security:specialist --in-progress</div>
+                    <div class="card-header">
+                        <div>
+                            <div class="loading-indicator">
+                                IN PROGRESS<span class="dots"></span><span class="cursor"></span>
+                            </div>
+                            <h3 style="margin-top: 0.5rem;">AWS Certified Security - Specialty</h3>
+                            <p class="company">Amazon Web Services</p>
+                        </div>
+                    </div>
+                    <p>Advanced AWS security certification focusing on data protection, infrastructure security, incident response, and compliance on AWS platform.</p>
+                </div>
+
+                <div class="card">
+                    <div class="hex-pattern">compTIA:Security+ --certified</div>
+                    <div class="card-header">
+                        <div>
+                            <p class="date">DEC 2024</p>
+                            <h3>CompTIA Security+ (SY0-701)</h3>
+                            <p class="company">CompTIA</p>
+                        </div>
+                    </div>
+                    <p style="margin-bottom: 1rem;">Industry-standard certification covering threat management, cryptography, identity management, risk management, and security architecture. Certification ID: KXR11B3552E4QT9W</p>
+                    <a href="https://www.credly.com/badges/ee9abd2e-d622-4b6e-a37f-8f4e15cd17b5/public_url" target="_blank" class="btn" style="display: inline-block;">$ VIEW CERTIFICATE</a>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="gameModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalTitle">GAME_OVER</h3>
+            <p id="modalMessage"></p>
+            <button class="btn" onclick="closeModal()">$ CLOSE</button>
+        </div>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        console.log('Script loading...');
+        
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Active nav on scroll
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('nav a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').slice(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Fun Mode Toggle - Make explicitly global
+        window.toggleFunMode = function() {
+            console.log('toggleFunMode called');
+            const overlay = document.getElementById('funModeOverlay');
+            console.log('Overlay element:', overlay);
+            if (overlay) {
+                console.log('Overlay found, toggling active class');
+                const wasActive = overlay.classList.contains('active');
+                overlay.classList.toggle('active');
+                const isActive = overlay.classList.contains('active');
+                console.log('Was active:', wasActive, 'Is active now:', isActive);
+                document.body.style.overflow = isActive ? 'hidden' : 'auto';
+            } else {
+                console.error('Overlay not found!');
+            }
+        };
+
+        // Close fun mode when clicking outside
+        const funModeOverlay = document.getElementById('funModeOverlay');
+        if (funModeOverlay) {
+            funModeOverlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    toggleFunMode();
+                }
+            });
+        }
+
+        // Snake Game
+        const snakeCanvas = document.getElementById('snakeCanvas');
+        const snakeCtx = snakeCanvas ? snakeCanvas.getContext('2d') : null;
+        const snakeScoreEl = document.getElementById('snakeScore');
+        const snakeSkillsEl = document.getElementById('snakeSkills');
+        let snakeGame = null;
+        const gridSize = 20;
+        const tileCountSnake = 25;
+        const techSkills = ['JS', 'PY', 'REACT', 'NODE', 'TS', 'VUE', 'JAVA', 'C++', 'GO', 'RUST', 'AWS', 'K8S', 'DOCKER', 'SQL', 'MONGO', 'REDIS'];
+
+        class SnakeGame {
+            constructor() {
+                this.snake = [{x: 12, y: 10}];
+                this.direction = {x: 1, y: 0};
+                this.nextDirection = {x: 1, y: 0};
+                this.food = this.generateFood();
+                this.score = 0;
+                this.skills = 0;
+                this.gameOver = false;
+                this.speed = 150;
+                this.currentSkill = techSkills[Math.floor(Math.random() * techSkills.length)];
+            }
+
+            generateFood() {
+                return {
+                    x: Math.floor(Math.random() * tileCountSnake),
+                    y: Math.floor(Math.random() * 20)
+                };
+            }
+
+            update() {
+                if (this.gameOver) return;
+                this.direction = this.nextDirection;
+                const head = {
+                    x: this.snake[0].x + this.direction.x,
+                    y: this.snake[0].y + this.direction.y
+                };
+
+                if (head.x < 0 || head.x >= tileCountSnake || head.y < 0 || head.y >= 20) {
+                    this.endGame();
+                    return;
+                }
+
+                if (this.snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+                    this.endGame();
+                    return;
+                }
+
+                this.snake.unshift(head);
+
+                if (head.x === this.food.x && head.y === this.food.y) {
+                    this.score += 10;
+                    this.skills++;
+                    this.food = this.generateFood();
+                    this.currentSkill = techSkills[Math.floor(Math.random() * techSkills.length)];
+                    snakeScoreEl.textContent = this.score;
+                    snakeSkillsEl.textContent = this.skills;
+                    this.speed = Math.max(50, this.speed - 5);
+                } else {
+                    this.snake.pop();
+                }
+            }
+
+            draw() {
+                snakeCtx.fillStyle = '#fff';
+                snakeCtx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+
+                snakeCtx.strokeStyle = '#e0e0e0';
+                snakeCtx.lineWidth = 1;
+                for (let i = 0; i <= tileCountSnake; i++) {
+                    snakeCtx.beginPath();
+                    snakeCtx.moveTo(i * gridSize, 0);
+                    snakeCtx.lineTo(i * gridSize, snakeCanvas.height);
+                    snakeCtx.stroke();
+                }
+                for (let i = 0; i <= 20; i++) {
+                    snakeCtx.beginPath();
+                    snakeCtx.moveTo(0, i * gridSize);
+                    snakeCtx.lineTo(snakeCanvas.width, i * gridSize);
+                    snakeCtx.stroke();
+                }
+
+                this.snake.forEach((segment, index) => {
+                    snakeCtx.fillStyle = index === 0 ? '#0a0a0a' : '#4a4a4a';
+                    snakeCtx.fillRect(segment.x * gridSize + 1, segment.y * gridSize + 1, gridSize - 2, gridSize - 2);
+                });
+
+                snakeCtx.fillStyle = '#b24bf3';
+                snakeCtx.fillRect(this.food.x * gridSize + 2, this.food.y * gridSize + 2, gridSize - 4, gridSize - 4);
+                snakeCtx.fillStyle = '#fff';
+                snakeCtx.font = 'bold 8px IBM Plex Mono';
+                snakeCtx.textAlign = 'center';
+                snakeCtx.textBaseline = 'middle';
+                snakeCtx.fillText(this.currentSkill, this.food.x * gridSize + gridSize / 2, this.food.y * gridSize + gridSize / 2);
+            }
+
+            changeDirection(newDirection) {
+                if (newDirection.x === -this.direction.x && newDirection.y === -this.direction.y) return;
+                this.nextDirection = newDirection;
+            }
+
+            endGame() {
+                console.log('Snake game ended');
+                this.gameOver = true;
+                // Change button text to TRY AGAIN
+                const startBtn = document.getElementById('snakeStartBtn');
+                if (startBtn) {
+                    startBtn.textContent = '$ TRY AGAIN';
+                }
+                console.log('Game over flag set, will draw game over on next frame');
+            }
+
+            drawGameOver() {
+                console.log('Drawing snake game over screen');
+                // Draw the final game state first
+                this.draw();
+                
+                // Then overlay the game over screen
+                snakeCtx.fillStyle = 'rgba(10, 10, 10, 0.85)';
+                snakeCtx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+
+                // Game Over Title
+                snakeCtx.fillStyle = '#b24bf3';
+                snakeCtx.font = 'bold 48px IBM Plex Mono';
+                snakeCtx.textAlign = 'center';
+                snakeCtx.textBaseline = 'middle';
+                snakeCtx.fillText('GAME OVER', snakeCanvas.width / 2, snakeCanvas.height / 2 - 80);
+
+                // Stats
+                snakeCtx.fillStyle = '#00ff41';
+                snakeCtx.font = 'bold 24px IBM Plex Mono';
+                snakeCtx.fillText(`SKILLS COLLECTED: ${this.skills}`, snakeCanvas.width / 2, snakeCanvas.height / 2 - 20);
+                snakeCtx.fillText(`FINAL SCORE: ${this.score}`, snakeCanvas.width / 2, snakeCanvas.height / 2 + 20);
+
+                // Instructions
+                snakeCtx.fillStyle = '#fafafa';
+                snakeCtx.font = '16px IBM Plex Mono';
+                snakeCtx.fillText('Press the button below to play again', snakeCanvas.width / 2, snakeCanvas.height / 2 + 70);
+                
+                console.log('Game over screen drawn with stats:', this.skills, this.score);
+            }
+        }
+
+        window.startSnakeGame = function() {
+            console.log('Starting snake game...');
+            if (!snakeCanvas || !snakeCtx) {
+                console.error('Snake canvas not found');
+                return;
+            }
+            
+            // Reset button text
+            const startBtn = document.getElementById('snakeStartBtn');
+            if (startBtn) {
+                startBtn.textContent = '$ START GAME';
+            }
+            
+            if (snakeGame && !snakeGame.gameOver) return;
+            snakeGame = new SnakeGame();
+            snakeScoreEl.textContent = '0';
+            snakeSkillsEl.textContent = '0';
+            
+            let gameLoopRunning = true;
+            function gameLoop() {
+                if (snakeGame && gameLoopRunning) {
+                    if (!snakeGame.gameOver) {
+                        snakeGame.update();
+                        snakeGame.draw();
+                        setTimeout(gameLoop, snakeGame.speed);
+                    } else {
+                        // Game is over - draw game over screen
+                        snakeGame.drawGameOver();
+                        gameLoopRunning = false; // Stop the loop
+                    }
+                }
+            }
+            gameLoop();
+        };
+
+        // Pong Game
+        const pongCanvas = document.getElementById('pongCanvas');
+        const pongCtx = pongCanvas ? pongCanvas.getContext('2d') : null;
+        const pongScoreEl = document.getElementById('pongScore');
+        const pongLevelEl = document.getElementById('pongLevel');
+        let pongGame = null;
+        const achievements = ['PROMOTION', 'PROJECT', 'AWARD', 'SKILL', 'MENTOR', 'LEAD', 'PATENT', 'SPEAK', 'PUBLISH', 'STARTUP', 'OPEN-SRC', 'CERT'];
+
+        class PongGame {
+            constructor() {
+                this.paddle = { x: pongCanvas.width / 2 - 50, y: pongCanvas.height - 30, width: 100, height: 15, speed: 8 };
+                this.ball = this.resetBall();
+                this.score = 0;
+                this.level = 1;
+                this.gameOver = false;
+                this.keys = {};
+                this.achievement = achievements[Math.floor(Math.random() * achievements.length)];
+            }
+
+            resetBall() {
+                return { x: pongCanvas.width / 2, y: pongCanvas.height / 2, dx: (Math.random() > 0.5 ? 1 : -1) * 4, dy: -4, radius: 8 };
+            }
+
+            update() {
+                if (this.gameOver) return;
+                if (this.keys['ArrowLeft'] && this.paddle.x > 0) this.paddle.x -= this.paddle.speed;
+                if (this.keys['ArrowRight'] && this.paddle.x < pongCanvas.width - this.paddle.width) this.paddle.x += this.paddle.speed;
+
+                this.ball.x += this.ball.dx;
+                this.ball.y += this.ball.dy;
+
+                if (this.ball.x - this.ball.radius < 0 || this.ball.x + this.ball.radius > pongCanvas.width) this.ball.dx *= -1;
+                if (this.ball.y - this.ball.radius < 0) this.ball.dy *= -1;
+
+                if (this.ball.y + this.ball.radius > this.paddle.y && this.ball.y - this.ball.radius < this.paddle.y + this.paddle.height &&
+                    this.ball.x > this.paddle.x && this.ball.x < this.paddle.x + this.paddle.width) {
+                    this.ball.dy *= -1;
+                    this.score += 10;
+                    pongScoreEl.textContent = this.score;
+                    this.achievement = achievements[Math.floor(Math.random() * achievements.length)];
+                    if (this.score % 50 === 0) {
+                        this.level++;
+                        pongLevelEl.textContent = this.level;
+                        this.ball.dx *= 1.1;
+                        this.ball.dy *= 1.1;
+                    }
+                }
+
+                if (this.ball.y - this.ball.radius > pongCanvas.height) this.endGame();
+            }
+
+            draw() {
+                pongCtx.fillStyle = '#fff';
+                pongCtx.fillRect(0, 0, pongCanvas.width, pongCanvas.height);
+                pongCtx.strokeStyle = '#e0e0e0';
+                pongCtx.lineWidth = 1;
+                pongCtx.setLineDash([10, 5]);
+                pongCtx.beginPath();
+                pongCtx.moveTo(pongCanvas.width / 2, 0);
+                pongCtx.lineTo(pongCanvas.width / 2, pongCanvas.height);
+                pongCtx.stroke();
+                pongCtx.setLineDash([]);
+
+                pongCtx.fillStyle = '#0a0a0a';
+                pongCtx.fillRect(this.paddle.x, this.paddle.y, this.paddle.width, this.paddle.height);
+                pongCtx.fillStyle = '#b24bf3';
+                pongCtx.beginPath();
+                pongCtx.arc(this.ball.x, this.ball.y, this.ball.radius, 0, Math.PI * 2);
+                pongCtx.fill();
+                pongCtx.fillStyle = '#fff';
+                pongCtx.font = 'bold 6px IBM Plex Mono';
+                pongCtx.textAlign = 'center';
+                pongCtx.textBaseline = 'middle';
+                pongCtx.fillText(this.achievement, this.ball.x, this.ball.y);
+            }
+
+            endGame() {
+                console.log('Pong game ended');
+                this.gameOver = true;
+                // Change button text to TRY AGAIN
+                const startBtn = document.getElementById('pongStartBtn');
+                if (startBtn) {
+                    startBtn.textContent = '$ TRY AGAIN';
+                }
+                console.log('Game over flag set, will draw game over on next frame');
+            }
+
+            drawGameOver() {
+                console.log('Drawing pong game over screen');
+                // Draw the final game state first
+                this.draw();
+                
+                // Then overlay the game over screen
+                pongCtx.fillStyle = 'rgba(10, 10, 10, 0.85)';
+                pongCtx.fillRect(0, 0, pongCanvas.width, pongCanvas.height);
+
+                // Game Over Title
+                pongCtx.fillStyle = '#b24bf3';
+                pongCtx.font = 'bold 48px IBM Plex Mono';
+                pongCtx.textAlign = 'center';
+                pongCtx.textBaseline = 'middle';
+                pongCtx.fillText('GAME OVER', pongCanvas.width / 2, pongCanvas.height / 2 - 80);
+
+                // Stats
+                pongCtx.fillStyle = '#00ff41';
+                pongCtx.font = 'bold 24px IBM Plex Mono';
+                pongCtx.fillText(`LEVEL REACHED: ${this.level}`, pongCanvas.width / 2, pongCanvas.height / 2 - 20);
+                pongCtx.fillText(`FINAL SCORE: ${this.score}`, pongCanvas.width / 2, pongCanvas.height / 2 + 20);
+
+                // Instructions
+                pongCtx.fillStyle = '#fafafa';
+                pongCtx.font = '16px IBM Plex Mono';
+                pongCtx.fillText('Press the button below to play again', pongCanvas.width / 2, pongCanvas.height / 2 + 70);
+                
+                console.log('Game over screen drawn with stats:', this.level, this.score);
+            }
+        }
+
+        window.startPongGame = function() {
+            console.log('Starting pong game...');
+            if (!pongCanvas || !pongCtx) {
+                console.error('Pong canvas not found');
+                return;
+            }
+            
+            // Reset button text
+            const startBtn = document.getElementById('pongStartBtn');
+            if (startBtn) {
+                startBtn.textContent = '$ START GAME';
+            }
+            
+            if (pongGame && !pongGame.gameOver) return;
+            pongGame = new PongGame();
+            pongScoreEl.textContent = '0';
+            pongLevelEl.textContent = '1';
+            
+            let gameLoopRunning = true;
+            function gameLoop() {
+                if (pongGame && gameLoopRunning) {
+                    if (!pongGame.gameOver) {
+                        pongGame.update();
+                        pongGame.draw();
+                        requestAnimationFrame(gameLoop);
+                    } else {
+                        // Game is over - draw game over screen
+                        pongGame.drawGameOver();
+                        gameLoopRunning = false; // Stop the loop
+                    }
+                }
+            }
+            gameLoop();
+        };
+
+        document.addEventListener('keydown', (e) => {
+            if (snakeGame && !snakeGame.gameOver) {
+                switch(e.key) {
+                    case 'ArrowUp': e.preventDefault(); snakeGame.changeDirection({x: 0, y: -1}); break;
+                    case 'ArrowDown': e.preventDefault(); snakeGame.changeDirection({x: 0, y: 1}); break;
+                    case 'ArrowLeft': e.preventDefault(); snakeGame.changeDirection({x: -1, y: 0}); break;
+                    case 'ArrowRight': e.preventDefault(); snakeGame.changeDirection({x: 1, y: 0}); break;
+                }
+            }
+            if (pongGame && !pongGame.gameOver) pongGame.keys[e.key] = true;
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (pongGame) pongGame.keys[e.key] = false;
+        });
+
+        function showModal(title, message) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('gameModal').classList.add('active');
+        }
+
+        window.closeModal = function() {
+            document.getElementById('gameModal').classList.remove('active');
+        };
+
+        window.showModal = showModal;
+
+        console.log('All functions loaded. toggleFunMode:', typeof window.toggleFunMode);
+    </script>
+</body>
+</html>
