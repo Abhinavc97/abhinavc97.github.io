@@ -973,6 +973,9 @@
             }
         }
     </style>
+    <!-- GoatCounter Analytics -->
+    <script data-goatcounter="https://abhinavc97.goatcounter.com/count"
+            async src="https://gc.zgo.at/count.js"></script>
 </head>
 <body>
     <!-- Fun Mode Tab -->
@@ -1055,7 +1058,7 @@
             <div class="social-links">
                 <a href="https://github.com/abhinavc97" target="_blank">GITHUB</a>
                 <a href="https://linkedin.com/in/abhinavc97" target="_blank">LINKEDIN</a>
-                <a href="/cdn-cgi/l/email-protection#5e3f3c3637706f6767696c6a1e39333f3732703d3133">EMAIL</a>
+                <a href="mailto:abhi.199724@gmail.com">EMAIL</a>
             </div>
         </div>
 
@@ -1391,7 +1394,7 @@
         </div>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
         console.log('Script loading...');
         
         // Smooth scrolling
@@ -1439,6 +1442,23 @@
                 const isActive = overlay.classList.contains('active');
                 console.log('Was active:', wasActive, 'Is active now:', isActive);
                 document.body.style.overflow = isActive ? 'hidden' : 'auto';
+                
+                // Track Fun Mode open event with GoatCounter
+                if (isActive) {
+                    // Wait a bit for goatcounter to load
+                    setTimeout(() => {
+                        if (window.goatcounter && typeof window.goatcounter.count === 'function') {
+                            window.goatcounter.count({
+                                path: 'fun-mode-opened',
+                                title: 'Fun Mode Opened',
+                                event: true,
+                            });
+                            console.log('✓ GoatCounter: Fun Mode event tracked');
+                        } else {
+                            console.warn('⚠ GoatCounter not loaded yet');
+                        }
+                    }, 100);
+                }
             } else {
                 console.error('Overlay not found!');
             }
@@ -1615,6 +1635,20 @@
             snakeScoreEl.textContent = '0';
             snakeSkillsEl.textContent = '0';
             
+            // Track Snake game start with GoatCounter
+            setTimeout(() => {
+                if (window.goatcounter && typeof window.goatcounter.count === 'function') {
+                    window.goatcounter.count({
+                        path: 'game-snake-started',
+                        title: 'Snake Game Started',
+                        event: true,
+                    });
+                    console.log('✓ GoatCounter: Snake game start tracked');
+                } else {
+                    console.warn('⚠ GoatCounter not loaded - Snake game not tracked');
+                }
+            }, 100);
+            
             let gameLoopRunning = true;
             function gameLoop() {
                 if (snakeGame && gameLoopRunning) {
@@ -1768,6 +1802,20 @@
             pongScoreEl.textContent = '0';
             pongLevelEl.textContent = '1';
             
+            // Track Pong game start with GoatCounter
+            setTimeout(() => {
+                if (window.goatcounter && typeof window.goatcounter.count === 'function') {
+                    window.goatcounter.count({
+                        path: 'game-pong-started',
+                        title: 'Pong Game Started',
+                        event: true,
+                    });
+                    console.log('✓ GoatCounter: Pong game start tracked');
+                } else {
+                    console.warn('⚠ GoatCounter not loaded - Pong game not tracked');
+                }
+            }, 100);
+            
             let gameLoopRunning = true;
             function gameLoop() {
                 if (pongGame && gameLoopRunning) {
@@ -1814,6 +1862,18 @@
         window.showModal = showModal;
 
         console.log('All functions loaded. toggleFunMode:', typeof window.toggleFunMode);
+        
+        // Check GoatCounter loading status
+        setTimeout(() => {
+            if (window.goatcounter && typeof window.goatcounter.count === 'function') {
+                console.log('✓ GoatCounter loaded successfully!');
+                console.log('✓ Tracking enabled for: abhinavc97.goatcounter.com');
+            } else {
+                console.warn('⚠ GoatCounter not loaded!');
+                console.warn('⚠ Check: Ad blocker, privacy extensions, or network issues');
+                console.warn('⚠ Script URL: https://gc.zgo.at/count.js');
+            }
+        }, 2000); // Wait 2 seconds for script to load
     </script>
 </body>
 </html>
